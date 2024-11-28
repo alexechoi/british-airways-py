@@ -1,7 +1,6 @@
 import requests
 from .config import BASE_URL, HEADERS
-from .utils import build_url, parse_response
-
+from .utils import parse_response
 
 def get_calendar_prices(origin, destination, trip_length, months):
     """
@@ -16,25 +15,29 @@ def get_calendar_prices(origin, destination, trip_length, months):
     Returns:
         list: A list of parsed results containing calendar pricing data.
     """
-    # Construct the query parameters
-    params = {
-        "fq": f"month_year:({' OR '.join(months)})",
-        "fq": f"number_of_nights:{trip_length}",
-        "fq": f"departure_city:{origin}",
-        "fq": f"arrival_city:{destination}",
-        "fq": "cabin:M",
-        "fq": "trip_type:RT",
-        "fq": "-outbound_date:[* TO NOW-1DAY]",
-        "wt": "json",
-        "group": "true",
-        "group.field": "outbound_date_string",
-        "sort": "outbound_date asc,lowest_price asc",
-        "group.main": "true",
-        "rows": "93",
-    }
+    endpoint = "lpbd/lpbdcalendar"
+
+    # Construct the query parameters with dynamic values
+    query_params = (
+        f"fq=month_year:({'%20OR%20'.join(months)})&"
+        f"fq=number_of_nights:{trip_length}&"
+        f"fq=departure_city:{origin}&"
+        f"fq=arrival_city:{destination}&"
+        "fq=cabin:M&"
+        "fq=trip_type:RT&"
+        "fq=-outbound_date:[*+TO+NOW-1DAY]&"
+        "wt=json&"
+        "group=true&"
+        "group.field=outbound_date_string&"
+        "sort=outbound_date%20asc,lowest_price%20asc&"
+        "group.main=true&"
+        "rows=93"
+    )
 
     # Build the request URL
-    url = build_url("lpbd/lpbdcalendar", params)
+    url = f"{BASE_URL}/{endpoint}?{query_params}"
+
+    print(url)  # Debugging: Print the final URL
 
     try:
         # Send the GET request
