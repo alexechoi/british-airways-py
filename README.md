@@ -1,56 +1,50 @@
-# British Airways Python Package
+# British Airways API Python Package
 
-The **British Airways Python Package** provides an easy-to-use interface for interacting with British Airways APIs. **This package is in no way affiliated with British Airways** This package simplifies fetching travel data such as the cheapest round-trip flight options. The package is modular and extendable, making it easy to add more features in the future.
+This Python package provides an interface to fetch data from the British Airways Low-Price Finder API. Currently, it supports fetching the **cheapest round-trip flights** and **monthly pricing graphs** for specified routes. **This package is in no way affiliated with British Airways**
+
+## Features
+
+- Fetch the **cheapest round-trip flights** for a region and origin airport.
+- Retrieve **monthly pricing data** for a specific route.
 
 ---
 
 ## Installation
 
-Clone this repository and install the required dependencies:
+Clone the repository and install the package using pip:
 
 ```bash
-git clone <repository_url>
+git clone <repo-url>
 cd british-airways-py
-pip install -r requirements.txt
+pip install .
 ```
 
 ---
 
-## Features
+## Functions
 
-### `get_cheapest_round_trips`
+### 1. `get_cheapest_round_trips`
 
-This function allows you to fetch the cheapest round-trip flight options for a specified region and origin airport.
+Fetch the cheapest round-trip flights for a given region and origin.
 
-#### Parameters
+#### Parameters:
+- `region` (str): The region code (e.g., "FEA").
+- `origin` (str): The origin airport code (e.g., "LON").
 
-- **`region`**: The region code where you want to search for flights. See the **Region Codes** section below for details.
-- **`origin`**: The airport code of the departure location (e.g., `LON` for London).
-
-#### Returns
-
-A list of flight options, including destination cities, prices, and currency.
-
-#### Example
+#### Example Usage:
 
 ```python
 from britishairways.api import BritishAirways
 
-# Initialize the British Airways API client
+# Initialize the client
 ba = BritishAirways()
 
-# Fetch the cheapest round-trip flights
-region = "FEA"  # Far East and Australia
-origin = "LON"  # London
-try:
-    results = ba.get_cheapest_round_trips(region=region, origin=origin)
-    print("Cheapest Flights:", results)
-except Exception as e:
-    print(f"Error: {e}")
+# Get the cheapest flights for Far East and Australia from London
+cheapest_flights = ba.get_cheapest_round_trips(region="FEA", origin="LON")
+print(cheapest_flights)
 ```
 
-#### Sample Output
-
+#### Example Output:
 ```json
 [
     {
@@ -60,19 +54,69 @@ except Exception as e:
         "departure": "LHR",
         "arrival": "HKG",
         "dates": {
-            "outbound": "2025-01-01",
-            "inbound": "2025-01-02"
+            "outbound": "2024-12-01",
+            "inbound": "2024-12-07"
         }
     },
     {
-        "destination": "Singapore",
-        "price": 593,
+        "destination": "Tokyo",
+        "price": 931,
         "currency": "GBP",
         "departure": "LHR",
-        "arrival": "SIN",
+        "arrival": "HND",
         "dates": {
-            "outbound": "2025-01-03",
-            "inbound": "2025-01-04"
+            "outbound": "2024-12-15",
+            "inbound": "2024-12-21"
+        }
+    }
+]
+```
+
+### 2. `get_monthly_graphs`
+
+Retrieve monthly pricing data for a specific origin and destination.
+
+#### Parameters:
+- `origin` (str): The origin airport code (e.g., "LHR").
+- `destination` (str): The destination airport code (e.g., "ATL").
+- `trip_length` (int): The length of the trip in days (e.g., 7).
+
+#### Example Usage:
+
+```python
+from britishairways.api import BritishAirways
+
+# Initialize the client
+ba = BritishAirways()
+
+# Get monthly pricing data for a 7-day trip from London to Atlanta
+monthly_graphs = ba.get_monthly_graphs(origin="LHR", destination="ATL", trip_length=7)
+print(monthly_graphs)
+```
+
+#### Example Output:
+```json
+[
+    {
+        "destination": null,
+        "price": 1488,
+        "currency": "GBP",
+        "departure": "LHR",
+        "arrival": "ATL",
+        "dates": {
+            "outbound": "2024-10-11",
+            "inbound": "2024-10-18"
+        }
+    },
+    {
+        "destination": null,
+        "price": 1308,
+        "currency": "GBP",
+        "departure": "LHR",
+        "arrival": "ATL",
+        "dates": {
+            "outbound": "2024-11-12",
+            "inbound": "2024-11-19"
         }
     }
 ]
@@ -82,42 +126,29 @@ except Exception as e:
 
 ## Region Codes
 
-Below is a list of region codes supported by the `get_cheapest_round_trips` function:
+The following region codes are supported:
 
-| Region                            | Code              |
-|-----------------------------------|-------------------|
-| North America                     | `NOA`             |
-| Latin America and Caribbean       | `SOA`             |
-| Europe, UK, and Ireland           | `EUK`             |
-| South and Central Asia            | `SAS`             |
-| Middle East and Africa            | `MDE+OR+AFR`      |
-| Far East and Australia            | `FEA`             |
-
----
-
-## Dependencies
-
-The package relies on the following libraries:
-- `requests` for making HTTP requests.
-- `urllib.parse` for URL encoding.
-
-Install dependencies using:
-```bash
-pip install -r requirements.txt
-```
+| Code      | Region                                  |
+|-----------|-----------------------------------------|
+| `NOA`     | North America                          |
+| `SOA`     | Latin America and Caribbean            |
+| `EUK`     | Europe, UK, and Ireland                |
+| `SAS`     | South and Central Asia                 |
+| `MDE+OR+AFR` | Middle East and Africa               |
+| `FEA`     | Far East and Australia                 |
 
 ---
 
 ## Contributing
 
-We welcome contributions! Feel free to fork the repository and submit a pull request. For significant changes, please open an issue first to discuss what you would like to change.
+Contributions are welcome! Feel free to submit a pull request or open an issue.
 
 ---
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License.
 
 ---
 
-Happy coding! 🎉
+Happy Coding!
