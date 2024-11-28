@@ -37,8 +37,6 @@ def get_calendar_prices(origin, destination, trip_length, months):
     # Build the request URL
     url = f"{BASE_URL}/{endpoint}?{query_params}"
 
-    print(url)  # Debugging: Print the final URL
-
     try:
         # Send the GET request
         response = requests.get(url, headers=HEADERS)

@@ -2,7 +2,7 @@ from .ba_cheapest import get_cheapest_round_trips
 from .ba_graphs import get_monthly_graphs
 from .ba_calendar import get_calendar_prices
 from .config import BASE_URL, HEADERS
-
+from datetime import datetime, timedelta
 
 class BritishAirways:
     def __init__(self):
@@ -53,3 +53,45 @@ class BritishAirways:
             list: A list of parsed results containing calendar pricing data.
         """
         return get_calendar_prices(origin, destination, trip_length, months)
+    
+    def get_specific_round_trip(self, origin, destination, departure_date, return_date):
+        """
+        Fetch specific round-trip flights for a given destination on certain dates.
+
+        Args:
+            origin (str): The origin airport code (e.g., "LHR").
+            destination (str): The destination airport code (e.g., "JFK").
+            departure_date (str): The departure date in "YYYY-MM-DD" format.
+            return_date (str): The return date in "YYYY-MM-DD" format.
+
+        Returns:
+            list: Filtered flight options for the specified dates.
+        """
+        if not return_date:
+            raise ValueError("A return_date is required for round trips.")
+
+        # Parse the departure and return dates
+        departure_dt = datetime.strptime(departure_date, "%Y-%m-%d")
+        return_dt = datetime.strptime(return_date, "%Y-%m-%d")
+
+        # Calculate the trip length
+        trip_length = (return_dt - departure_dt).days
+
+        if trip_length <= 0:
+            raise ValueError("return_date must be after departure_date.")
+
+        # Determine months for the calendar query
+        months = list({departure_dt.strftime("%Y%m"), return_dt.strftime("%Y%m")})
+
+        # Fetch calendar prices
+        calendar_data = self.get_calendar_prices(origin, destination, trip_length, months)
+
+        print(f"Calendar data: {calendar_data}")
+
+        # Filter flights for the specific departure date
+        filtered_flights = [
+            flight for flight in calendar_data
+            if flight.get('outbound_date') == f"{departure_date}T00:00:00Z"
+        ]
+
+        return filtered_flights
