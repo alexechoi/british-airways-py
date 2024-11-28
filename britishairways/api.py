@@ -1,7 +1,7 @@
 from .ba_cheapest import get_cheapest_round_trips
 from .ba_graphs import get_monthly_graphs
+from .ba_calendar import get_calendar_prices
 from .config import BASE_URL, HEADERS
-from .utils import parse_response, build_url
 
 
 class BritishAirways:
@@ -38,3 +38,18 @@ class BritishAirways:
             list: A list of parsed results containing graphs data.
         """
         return get_monthly_graphs(origin, destination, trip_length)
+
+    def get_calendar_prices(self, origin, destination, trip_length, months):
+        """
+        Wrapper for fetching calendar pricing data.
+
+        Args:
+            origin (str): The origin airport code (e.g., "LHR").
+            destination (str): The destination airport code (e.g., "NYC").
+            trip_length (int): The number of nights for the trip.
+            months (list): A list of months in "YYYYMM" format.
+
+        Returns:
+            list: A list of parsed results containing calendar pricing data.
+        """
+        return get_calendar_prices(origin, destination, trip_length, months)

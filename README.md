@@ -1,11 +1,16 @@
 # British Airways API Python Package
 
-This Python package provides an interface to fetch data from the British Airways Low-Price Finder API. Currently, it supports fetching the **cheapest round-trip flights** and **monthly pricing graphs** for specified routes. **This package is in no way affiliated with British Airways**
+This Python package provides an interface to fetch data from the British Airways Low-Price Finder API. Currently, it supports fetching the **cheapest round-trip flights**, **monthly pricing graphs**, and **calendar pricing data** for specified routes. 
+
+⚠️ **Disclaimer:** This package is in no way affiliated with British Airways.
+
+---
 
 ## Features
 
 - Fetch the **cheapest round-trip flights** for a region and origin airport.
-- Retrieve **monthly pricing data** for a specific route.
+- Retrieve **monthly pricing data** for a specific route and trip length.
+- Fetch **calendar-based pricing data** for specific months, showing daily flight prices.
 
 ---
 
@@ -32,7 +37,6 @@ Fetch the cheapest round-trip flights for a given region and origin.
 - `origin` (str): The origin airport code (e.g., "LON").
 
 #### Example Usage:
-
 ```python
 from britishairways.api import BritishAirways
 
@@ -72,6 +76,8 @@ print(cheapest_flights)
 ]
 ```
 
+---
+
 ### 2. `get_monthly_graphs`
 
 Retrieve monthly pricing data for a specific origin and destination.
@@ -82,7 +88,6 @@ Retrieve monthly pricing data for a specific origin and destination.
 - `trip_length` (int): The length of the trip in days (e.g., 7).
 
 #### Example Usage:
-
 ```python
 from britishairways.api import BritishAirways
 
@@ -124,24 +129,70 @@ print(monthly_graphs)
 
 ---
 
+### 3. `get_calendar_prices`
+
+Retrieve calendar-based pricing data for specific months, displaying daily flight prices.
+
+#### Parameters:
+- `origin` (str): The origin airport code (e.g., "LHR").
+- `destination` (str): The destination airport code (e.g., "NYC").
+- `trip_length` (int): The number of nights for the trip (e.g., 7).
+- `months` (list): A list of months in `YYYYMM` format (e.g., `["202412", "202501"]`).
+
+#### Example Usage:
+```python
+from britishairways.api import BritishAirways
+
+# Initialize the client
+ba = BritishAirways()
+
+# Get calendar pricing data for a 7-day trip from London to New York for specific months
+calendar_prices = ba.get_calendar_prices(
+    origin="LHR",
+    destination="NYC",
+    trip_length=7,
+    months=["202412", "202501", "202502"]
+)
+print(calendar_prices)
+```
+
+#### Example Output:
+```json
+[
+    {
+        "outbound_date": "2024-12-01",
+        "price": 50,
+        "cabin": "M"
+    },
+    {
+        "outbound_date": "2024-12-15",
+        "price": 45,
+        "cabin": "M"
+    },
+    ...
+]
+```
+
+---
+
 ## Region Codes
 
 The following region codes are supported:
 
-| Code      | Region                                  |
-|-----------|-----------------------------------------|
-| `NOA`     | North America                          |
-| `SOA`     | Latin America and Caribbean            |
-| `EUK`     | Europe, UK, and Ireland                |
-| `SAS`     | South and Central Asia                 |
-| `MDE+OR+AFR` | Middle East and Africa               |
-| `FEA`     | Far East and Australia                 |
+| Code           | Region                                   |
+|-----------------|-----------------------------------------|
+| `NOA`          | North America                           |
+| `SOA`          | Latin America and Caribbean             |
+| `EUK`          | Europe, UK, and Ireland                 |
+| `SAS`          | South and Central Asia                  |
+| `MDE+OR+AFR`   | Middle East and Africa                  |
+| `FEA`          | Far East and Australia                  |
 
 ---
 
 ## Contributing
 
-Contributions are welcome! Feel free to submit a pull request or open an issue.
+Contributions are welcome! If you find a bug or have a feature suggestion, feel free to open an issue or submit a pull request.
 
 ---
 
@@ -151,4 +202,4 @@ This project is licensed under the MIT License.
 
 ---
 
-Happy Coding!
+Happy Coding! 😊
