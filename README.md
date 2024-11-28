@@ -1,6 +1,6 @@
 # British Airways API Python Package
 
-This Python package provides an interface to fetch data from the British Airways Low-Price Finder API. Currently, it supports fetching the **cheapest round-trip flights**, **monthly pricing graphs**, and **calendar pricing data** for specified routes. 
+This Python package provides an interface to fetch data from the British Airways Low-Price Finder API. It supports fetching **round-trip flight details** for specific routes and dates, **monthly pricing graphs**, and **calendar pricing data**.
 
 ⚠️ **Disclaimer:** This package is in no way affiliated with British Airways.
 
@@ -11,6 +11,7 @@ This Python package provides an interface to fetch data from the British Airways
 - Fetch the **cheapest round-trip flights** for a region and origin airport.
 - Retrieve **monthly pricing data** for a specific route and trip length.
 - Fetch **calendar-based pricing data** for specific months, showing daily flight prices.
+- Retrieve **specific round-trip flight details** for a given departure and return date.
 
 ---
 
@@ -48,34 +49,6 @@ cheapest_flights = ba.get_cheapest_round_trips(region="FEA", origin="LON")
 print(cheapest_flights)
 ```
 
-#### Example Output:
-```json
-[
-    {
-        "destination": "Hong Kong",
-        "price": 690,
-        "currency": "GBP",
-        "departure": "LHR",
-        "arrival": "HKG",
-        "dates": {
-            "outbound": "2024-12-01",
-            "inbound": "2024-12-07"
-        }
-    },
-    {
-        "destination": "Tokyo",
-        "price": 931,
-        "currency": "GBP",
-        "departure": "LHR",
-        "arrival": "HND",
-        "dates": {
-            "outbound": "2024-12-15",
-            "inbound": "2024-12-21"
-        }
-    }
-]
-```
-
 ---
 
 ### 2. `get_monthly_graphs`
@@ -97,34 +70,6 @@ ba = BritishAirways()
 # Get monthly pricing data for a 7-day trip from London to Atlanta
 monthly_graphs = ba.get_monthly_graphs(origin="LHR", destination="ATL", trip_length=7)
 print(monthly_graphs)
-```
-
-#### Example Output:
-```json
-[
-    {
-        "destination": null,
-        "price": 1488,
-        "currency": "GBP",
-        "departure": "LHR",
-        "arrival": "ATL",
-        "dates": {
-            "outbound": "2024-10-11",
-            "inbound": "2024-10-18"
-        }
-    },
-    {
-        "destination": null,
-        "price": 1308,
-        "currency": "GBP",
-        "departure": "LHR",
-        "arrival": "ATL",
-        "dates": {
-            "outbound": "2024-11-12",
-            "inbound": "2024-11-19"
-        }
-    }
-]
 ```
 
 ---
@@ -156,20 +101,43 @@ calendar_prices = ba.get_calendar_prices(
 print(calendar_prices)
 ```
 
+---
+
+### 4. `get_specific_round_trip`
+
+Fetch details for a specific round trip, given a departure and return date.
+
+#### Parameters:
+- `origin` (str): The origin airport code (e.g., "LHR").
+- `destination` (str): The destination airport code (e.g., "JFK").
+- `departure_date` (str): The departure date in `YYYY-MM-DD` format.
+- `return_date` (str): The return date in `YYYY-MM-DD` format.
+
+#### Example Usage:
+```python
+from britishairways.api import BritishAirways
+
+# Initialize the client
+ba = BritishAirways()
+
+# Get details for a specific round trip
+flights = ba.get_specific_round_trip(
+    origin="LON",
+    destination="NYC",
+    departure_date="2024-12-15",
+    return_date="2024-12-22"
+)
+print(flights)
+```
+
 #### Example Output:
 ```json
 [
     {
-        "outbound_date": "2024-12-01",
-        "price": 50,
+        "outbound_date": "2024-12-15T00:00:00Z",
+        "price": 1934,
         "cabin": "M"
-    },
-    {
-        "outbound_date": "2024-12-15",
-        "price": 45,
-        "cabin": "M"
-    },
-    ...
+    }
 ]
 ```
 
