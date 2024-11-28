@@ -36,18 +36,9 @@ def get_calendar_prices(origin, destination, trip_length, months):
     # Build the request URL
     url = build_url("lpbd/lpbdcalendar", params)
 
-    # Debugging: Log the request details
-    print(f"Requesting URL: {url}")
-    print(f"Headers: {HEADERS}")
-
     try:
         # Send the GET request
         response = requests.get(url, headers=HEADERS)
-
-        # Debugging Response
-        print(f"Response Status: {response.status_code}")
-        print(f"Response Headers: {response.headers}")
-        print(f"Raw Response: {response.text}")
 
         # Validate Response
         if response.status_code == 404:
