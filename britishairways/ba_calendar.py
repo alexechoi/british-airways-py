@@ -2,7 +2,7 @@ import requests
 from .config import BASE_URL, HEADERS
 from .utils import parse_response
 
-def get_calendar_prices(origin, destination, trip_length, months):
+def get_calendar_prices(origin, destination, trip_length, months, trip_type="RT"):
     """
     Fetch calendar pricing data for a specific origin-destination pair.
 
@@ -11,6 +11,7 @@ def get_calendar_prices(origin, destination, trip_length, months):
         destination (str): The destination airport code (e.g., "NYC").
         trip_length (int): The number of nights for the trip.
         months (list): A list of months in "YYYYMM" format.
+        trip_type (str): The type of trip ("RT" for round trip, "OW" for one-way). Default is "RT".
 
     Returns:
         list: A list of parsed results containing calendar pricing data.
@@ -24,7 +25,7 @@ def get_calendar_prices(origin, destination, trip_length, months):
         f"fq=departure_city:{origin}&"
         f"fq=arrival_city:{destination}&"
         "fq=cabin:M&"
-        "fq=trip_type:RT&"
+        f"fq=trip_type:{trip_type}&"
         "fq=-outbound_date:[*+TO+NOW-1DAY]&"
         "wt=json&"
         "group=true&"
