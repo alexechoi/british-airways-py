@@ -1,6 +1,7 @@
 # utils.py
 from urllib.parse import urlencode
 from .config import BASE_URL
+from datetime import datetime
 
 # Helper function to build URLs with encoded parameters
 def build_url(endpoint, params):
@@ -16,6 +17,18 @@ def build_url(endpoint, params):
     """
     encoded_params = urlencode(params, safe="():*+")
     return f"{BASE_URL}/{endpoint}?{encoded_params}"
+
+def validate_date(date_string):
+    """
+    Validates whether a given string is in the format YYYY-MM-DD.
+    :param date_string: Date string to validate.
+    :return: True if valid, False otherwise.
+    """
+    try:
+        datetime.strptime(date_string, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
 
 def encode_query_params(params):
     """
