@@ -18,35 +18,50 @@ This Python package provides an interface to fetch data from the British Airways
 
 ## Installation
 
-Clone the repository and install the package using pip:
+This package is available on [PyPI](https://pypi.org/project/britishairways/). Install it directly using pip:
 
 ```bash
-git clone <repo-url>
+pip install britishairways
+```
+
+Or, clone the repository and install it locally:
+
+```bash
+git clone https://github.com/alexechoi/british-airways-py.git
 cd british-airways-py
 pip install .
 ```
 
 ---
 
-## Functions
+## Usage
 
-### 1. `get_one_way_price`
+### Initialize the Client
 
-Fetch the price for a one-way flight on a specific date.
+Before using the package, initialize the `BritishAirways` client:
 
-#### Parameters:
-- `origin` (str): The origin airport code (e.g., "LHR").
-- `destination` (str): The destination airport code (e.g., "JFK").
-- `departure_date` (str): The departure date in `YYYY-MM-DD` format.
-
-#### Example Usage:
 ```python
 from britishairways.api import BritishAirways
 
 # Initialize the client
 ba = BritishAirways()
+```
 
-# Get a one-way flight price
+---
+
+### Functions
+
+#### 1. **`get_one_way_price`**
+
+Fetch the price for a one-way flight on a specific date.
+
+**Parameters**:
+- `origin` (str): The origin airport code (e.g., "LHR").
+- `destination` (str): The destination airport code (e.g., "JFK").
+- `departure_date` (str): The departure date in `YYYY-MM-DD` format.
+
+**Example**:
+```python
 one_way_flight = ba.get_one_way_price(
     origin="LON",
     destination="NYC",
@@ -55,39 +70,20 @@ one_way_flight = ba.get_one_way_price(
 print(one_way_flight)
 ```
 
-Please note that sometimes this does not work with an IATA airport code. If there is a group of airports in a city, you should use that code for example LON will work but LHR will not work.
-
-#### Example Output:
-```json
-[
-    {
-        "outbound_date": "2024-12-15T00:00:00Z",
-        "price": 700,
-        "cabin": "M"
-    }
-]
-```
-
 ---
 
-### 2. `get_specific_round_trip`
+#### 2. **`get_specific_round_trip`**
 
 Fetch details for a specific round trip, given a departure and return date.
 
-#### Parameters:
+**Parameters**:
 - `origin` (str): The origin airport code (e.g., "LHR").
 - `destination` (str): The destination airport code (e.g., "JFK").
 - `departure_date` (str): The departure date in `YYYY-MM-DD` format.
 - `return_date` (str): The return date in `YYYY-MM-DD` format.
 
-#### Example Usage:
+**Example**:
 ```python
-from britishairways.api import BritishAirways
-
-# Initialize the client
-ba = BritishAirways()
-
-# Get details for a specific round trip
 flights = ba.get_specific_round_trip(
     origin="LON",
     destination="NYC",
@@ -97,84 +93,53 @@ flights = ba.get_specific_round_trip(
 print(flights)
 ```
 
-Please note that sometimes this does not work with an IATA airport code. If there is a group of airports in a city, you should use that code for example LON will work but LHR will not work.
-
-#### Example Output:
-```json
-[
-    {
-        "outbound_date": "2024-12-15T00:00:00Z",
-        "price": 1934,
-        "cabin": "M"
-    }
-]
-```
-
 ---
 
-### 3. `get_cheapest_round_trips`
+#### 3. **`get_cheapest_round_trips`**
 
 Fetch the cheapest round-trip flights for a given region and origin.
 
-#### Parameters:
+**Parameters**:
 - `region` (str): The region code (e.g., "FEA").
 - `origin` (str): The origin airport code (e.g., "LON").
 
-#### Example Usage:
+**Example**:
 ```python
-from britishairways.api import BritishAirways
-
-# Initialize the client
-ba = BritishAirways()
-
-# Get the cheapest flights for Far East and Australia from London
 cheapest_flights = ba.get_cheapest_round_trips(region="FEA", origin="LON")
 print(cheapest_flights)
 ```
 
 ---
 
-### 4. `get_monthly_graphs`
+#### 4. **`get_monthly_graphs`**
 
 Retrieve monthly pricing data for a specific origin and destination.
 
-#### Parameters:
+**Parameters**:
 - `origin` (str): The origin airport code (e.g., "LHR").
 - `destination` (str): The destination airport code (e.g., "ATL").
 - `trip_length` (int): The length of the trip in days (e.g., 7).
 
-#### Example Usage:
+**Example**:
 ```python
-from britishairways.api import BritishAirways
-
-# Initialize the client
-ba = BritishAirways()
-
-# Get monthly pricing data for a 7-day trip from London to Atlanta
 monthly_graphs = ba.get_monthly_graphs(origin="LHR", destination="ATL", trip_length=7)
 print(monthly_graphs)
 ```
 
 ---
 
-### 5. `get_calendar_prices`
+#### 5. **`get_calendar_prices`**
 
 Retrieve calendar-based pricing data for specific months, displaying daily flight prices.
 
-#### Parameters:
+**Parameters**:
 - `origin` (str): The origin airport code (e.g., "LHR").
 - `destination` (str): The destination airport code (e.g., "NYC").
 - `trip_length` (int): The number of nights for the trip (e.g., 7).
 - `months` (list): A list of months in `YYYYMM` format (e.g., `["202412", "202501"]`).
 
-#### Example Usage:
+**Example**:
 ```python
-from britishairways.api import BritishAirways
-
-# Initialize the client
-ba = BritishAirways()
-
-# Get calendar pricing data for a 7-day trip from London to New York for specific months
 calendar_prices = ba.get_calendar_prices(
     origin="LHR",
     destination="NYC",
